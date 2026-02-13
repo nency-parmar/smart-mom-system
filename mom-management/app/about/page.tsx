@@ -80,15 +80,22 @@ export default function AboutPage() {
                 }}
             >
                 <div className="card-body p-5">
-                    <h2 className="h5 fw-semibold mb-3">
+                    <h2 className="h5 fw-semibold mb-3 text-white">
                         Technology stack
                     </h2>
-                    <p className="small mb-0 text-secondary col-lg-8">
+                    <p className="small mb-0 text-light col-lg-8">
                         MoMenta is built using Next.js with the App Router and Bootstrap 5,
                         providing a clean, responsive, and scalable interface for managing
                         meetings, attendance, and reports efficiently.
                     </p>
                 </div>
+            </section>
+
+            {/* Footer */}
+            <section className="text-center pt-4 border-top">
+                <p className="small text-muted mb-0">
+                    Made with ❤️ by <span className="fw-semibold">Nency Parmar</span>
+                </p>
             </section>
 
         </div>
