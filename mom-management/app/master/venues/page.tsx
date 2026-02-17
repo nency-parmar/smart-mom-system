@@ -139,67 +139,65 @@ export default function Venues() {
                 </div>
 
                 <div className="card-body p-0">
-                    <div className="table-responsive">
-                        <table className="table table-sm align-middle mb-0">
-                            <thead className="table-light">
+                    <table className="table table-hover align-middle mb-0">
+                        <thead className="table-light">
+                            <tr>
+                                <th style={{ width: "10%" }}>Venue ID</th>
+                                <th style={{ width: "25%" }}>Venue Name</th>
+                                <th style={{ width: "12%" }}>Capacity</th>
+                                <th style={{ width: "23%" }}>Location</th>
+                                <th>Remarks</th>
+                                <th style={{ width: "15%" }}>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {loading ? (
                                 <tr>
-                                    <th style={{ width: "10%" }}>Venue ID</th>
-                                    <th style={{ width: "25%" }}>Venue Name</th>
-                                    <th style={{ width: "12%" }}>Capacity</th>
-                                    <th style={{ width: "23%" }}>Location</th>
-                                    <th>Remarks</th>
-                                    <th style={{ width: "15%" }}>Action</th>
+                                    <td colSpan={6} className="text-center py-4">Loading venues...</td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                {loading ? (
-                                    <tr>
-                                        <td colSpan={6} className="text-center py-4">Loading venues...</td>
-                                    </tr>
-                                ) : venues.map((venue) => (
-                                    <tr key={venue.venue_id}>
-                                        <td className="fw-bold small">{venue.venue_id}</td>
-                                        <td className="fw-semibold small">{venue.venue_name}</td>
-                                        <td className="small">{venue.capacity}</td>
-                                        <td className="small text-muted">{venue.location}</td>
-                                        <td className="small text-muted">{venue.remarks}</td>
-                                        <td>
-                                            <button
-                                                className="btn btn-sm me-2"
-                                                style={{
-                                                    borderColor: primaryBlue,
-                                                    color: primaryBlue,
-                                                    borderRadius: "6px"
-                                                }}
-                                                onClick={() => handleOpenModal(venue)}
-                                            >
-                                                Edit
-                                            </button>
-                                            <button
-                                                className="btn btn-sm"
-                                                style={{
-                                                    borderColor: "#dc2626",
-                                                    color: "#dc2626",
-                                                    borderRadius: "6px"
-                                                }}
-                                                onClick={() => handleDelete(venue.venue_id)}
-                                            >
-                                                Delete
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
+                            ) : venues.map((venue) => (
+                                <tr key={venue.venue_id}>
+                                    <td className="fw-bold small">{venue.venue_id}</td>
+                                    <td className="fw-semibold small">{venue.venue_name}</td>
+                                    <td className="small">{venue.capacity}</td>
+                                    <td className="small text-muted">{venue.location}</td>
+                                    <td className="small text-muted">{venue.remarks}</td>
+                                    <td>
+                                        <button
+                                            className="btn btn-sm me-2"
+                                            style={{
+                                                borderColor: primaryBlue,
+                                                color: primaryBlue,
+                                                borderRadius: "6px"
+                                            }}
+                                            onClick={() => handleOpenModal(venue)}
+                                        >
+                                            Edit
+                                        </button>
+                                        <button
+                                            className="btn btn-sm"
+                                            style={{
+                                                borderColor: "#dc2626",
+                                                color: "#dc2626",
+                                                borderRadius: "6px"
+                                            }}
+                                            onClick={() => handleDelete(venue.venue_id)}
+                                        >
+                                            Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
 
-                                {!loading && venues.length === 0 && (
-                                    <tr>
-                                        <td colSpan={6} className="text-center text-muted py-4">
-                                            No venues found
-                                        </td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
+                            {!loading && venues.length === 0 && (
+                                <tr>
+                                    <td colSpan={6} className="text-center text-muted py-4">
+                                        No venues found
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
                 </div>
             </div>
 

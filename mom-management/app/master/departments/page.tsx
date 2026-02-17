@@ -125,63 +125,61 @@ export default function Departments() {
                 </div>
 
                 <div className="card-body p-0">
-                    <div className="table-responsive">
-                        <table className="table table-sm align-middle mb-0">
-                            <thead className="table-light">
+                    <table className="table table-hover align-middle mb-0">
+                        <thead className="table-light">
+                            <tr>
+                                <th style={{ width: "8%" }}>#</th>
+                                <th style={{ width: "35%" }}>Department Name</th>
+                                <th>Remarks</th>
+                                <th style={{ width: "18%" }}>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {loading ? (
                                 <tr>
-                                    <th style={{ width: "8%" }}>#</th>
-                                    <th style={{ width: "35%" }}>Department Name</th>
-                                    <th>Remarks</th>
-                                    <th style={{ width: "18%" }}>Action</th>
+                                    <td colSpan={4} className="text-center py-4">Loading departments...</td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                {loading ? (
-                                    <tr>
-                                        <td colSpan={4} className="text-center py-4">Loading departments...</td>
-                                    </tr>
-                                ) : departments.map((dept, index) => (
-                                    <tr key={dept.department_id}>
-                                        <td className="fw-semibold">{index + 1}</td>
-                                        <td className="fw-semibold small">{dept.department_name}</td>
-                                        <td className="text-muted small">{dept.remarks}</td>
-                                        <td>
-                                            <button
-                                                className="btn btn-sm me-2"
-                                                style={{
-                                                    borderColor: primaryBlue,
-                                                    color: primaryBlue,
-                                                    borderRadius: "6px"
-                                                }}
-                                                onClick={() => handleOpenModal(dept)}
-                                            >
-                                                Edit
-                                            </button>
-                                            <button
-                                                className="btn btn-sm"
-                                                style={{
-                                                    borderColor: "#dc2626",
-                                                    color: "#dc2626",
-                                                    borderRadius: "6px"
-                                                }}
-                                                onClick={() => handleDelete(dept.department_id)}
-                                            >
-                                                Delete
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
+                            ) : departments.map((dept, index) => (
+                                <tr key={dept.department_id}>
+                                    <td className="fw-semibold">{index + 1}</td>
+                                    <td className="fw-semibold small">{dept.department_name}</td>
+                                    <td className="text-muted small">{dept.remarks}</td>
+                                    <td>
+                                        <button
+                                            className="btn btn-sm me-2"
+                                            style={{
+                                                borderColor: primaryBlue,
+                                                color: primaryBlue,
+                                                borderRadius: "6px"
+                                            }}
+                                            onClick={() => handleOpenModal(dept)}
+                                        >
+                                            Edit
+                                        </button>
+                                        <button
+                                            className="btn btn-sm"
+                                            style={{
+                                                borderColor: "#dc2626",
+                                                color: "#dc2626",
+                                                borderRadius: "6px"
+                                            }}
+                                            onClick={() => handleDelete(dept.department_id)}
+                                        >
+                                            Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
 
-                                {!loading && departments.length === 0 && (
-                                    <tr>
-                                        <td colSpan={4} className="text-center text-muted py-4">
-                                            No departments found
-                                        </td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
+                            {!loading && departments.length === 0 && (
+                                <tr>
+                                    <td colSpan={4} className="text-center text-muted py-4">
+                                        No departments found
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
                 </div>
             </div>
 

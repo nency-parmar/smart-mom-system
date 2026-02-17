@@ -1,11 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import ClientDate from '@/components/ClientDate';
 import { cancelMeeting } from '@/app/actions/meetings';
 
 // Define the shape of the data we expect from the server
-// You might want to import this from a shared type file or infer it from Prisma
 interface MeetingWithDetails {
     MeetingID: number;
     MeetingDate: Date;
@@ -28,21 +27,53 @@ interface MeetingWithDetails {
 }
 
 export default function MeetingsClient({ initialMeetings, userRole }: { initialMeetings: MeetingWithDetails[], userRole: string }) {
-    const today = new Date().toDateString(); // Simplified for now
+    const today = new Date().toDateString();
     const isAdmin = userRole === 'ADMIN';
 
-    const cardBlue = {
-        background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 45%, #020617 100%)',
-        color: '#e5e7eb'
-    };
+    const primaryBlue = '#1d4ed8';
     const headerBlue = {
         backgroundColor: '#0f172a',
         color: '#e5e7eb'
     };
-    const accentYellow = '#eab308';
-    const primaryBlue = '#1d4ed8';
 
-    const [meetings, setMeetings] = useState(initialMeetings);
+    // Filter states
+    const [searchQuery, setSearchQuery] = useState('');
+    const [statusFilter, setStatusFilter] = useState('All');
+    const [typeFilter, setTypeFilter] = useState('All Types');
+
+    // Get unique meeting types for filter dropdown
+    const meetingTypes = useMemo(() => {
+        const types = new Set(initialMeetings.map(m => m.MeetingType.MeetingTypeName));
+        return Array.from(types);
+    }, [initialMeetings]);
+
+    // Real-time filtered meetings
+    const filteredMeetings = useMemo(() => {
+        return initialMeetings.filter(meeting => {
+            // Search filter
+            const query = searchQuery.toLowerCase();
+            const matchesSearch = !query ||
+                meeting.MeetingDescription?.toLowerCase().includes(query) ||
+                meeting.MeetingID.toString().includes(query) ||
+                meeting.MeetingType.MeetingTypeName.toLowerCase().includes(query) ||
+                meeting.MeetingMember.some(m => m.Staff.StaffName.toLowerCase().includes(query));
+
+            // Status filter
+            let matchesStatus = true;
+            if (statusFilter === 'Upcoming') {
+                matchesStatus = !meeting.IsCancelled && new Date(meeting.MeetingDate) > new Date();
+            } else if (statusFilter === 'Completed') {
+                matchesStatus = !meeting.IsCancelled && new Date(meeting.MeetingDate) <= new Date();
+            } else if (statusFilter === 'Cancelled') {
+                matchesStatus = meeting.IsCancelled;
+            }
+
+            // Type filter
+            const matchesType = typeFilter === 'All Types' || meeting.MeetingType.MeetingTypeName === typeFilter;
+
+            return matchesSearch && matchesStatus && matchesType;
+        });
+    }, [initialMeetings, searchQuery, statusFilter, typeFilter]);
 
     const handleCancel = async (id: number) => {
         if (!isAdmin) return;
@@ -51,7 +82,6 @@ export default function MeetingsClient({ initialMeetings, userRole }: { initialM
             if (reason) {
                 try {
                     await cancelMeeting(id, reason);
-                    // Optimistic update or refresh
                     window.location.reload();
                 } catch (error) {
                     alert("Failed to cancel meeting");
@@ -75,8 +105,8 @@ export default function MeetingsClient({ initialMeetings, userRole }: { initialM
                 <div className="d-flex flex-column align-items-md-end mt-3 mt-md-0">
                     <span className="small text-muted">Today</span>
                     <span className="fw-semibold">{today}</span>
-                    <div className="mt-2 d-flex gap-2">
-                        {isAdmin && (
+                    {isAdmin && (
+                        <div className="mt-2">
                             <a href="/meetings/new" className="btn btn-sm" style={{
                                 backgroundColor: primaryBlue,
                                 borderColor: primaryBlue,
@@ -84,43 +114,50 @@ export default function MeetingsClient({ initialMeetings, userRole }: { initialM
                             }}>
                                 + New Meeting
                             </a>
-                        )}
-                        <button className="btn btn-sm btn-outline-secondary dropdown-toggle" type="button">
-                            Filters
-                        </button>
-                    </div>
+                        </div>
+                    )}
                 </div>
             </div>
 
-            {/* Search & Filters */}
+            {/* Search & Filters — real-time, no button */}
             <div className="card border-0 shadow-sm mb-4">
                 <div className="card-body">
                     <div className="row g-3 align-items-end">
-                        <div className="col-md-4">
-                            <label className="form-label small text-muted">Search Meetings</label>
-                            <input type="text" className="form-control form-control-sm" placeholder="Search..." />
+                        <div className="col-md-5">
+                            <label className="form-label small text-muted fw-semibold">Search Meetings</label>
+                            <input
+                                type="text"
+                                className="form-control form-control-sm"
+                                placeholder="Search by description, ID, type, or staff..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                            />
                         </div>
-                        <div className="col-md-3">
-                            <label className="form-label small text-muted">Meeting Type</label>
-                            <select className="form-select form-select-sm">
+                        <div className="col-md-4">
+                            <label className="form-label small text-muted fw-semibold">Meeting Type</label>
+                            <select
+                                className="form-select form-select-sm"
+                                value={typeFilter}
+                                onChange={(e) => setTypeFilter(e.target.value)}
+                            >
                                 <option>All Types</option>
+                                {meetingTypes.map(type => (
+                                    <option key={type} value={type}>{type}</option>
+                                ))}
                             </select>
                         </div>
-                        <div className="col-md-2">
-                            <label className="form-label small text-muted">Status</label>
-                            <select className="form-select form-select-sm">
+                        <div className="col-md-3">
+                            <label className="form-label small text-muted fw-semibold">Status</label>
+                            <select
+                                className="form-select form-select-sm"
+                                value={statusFilter}
+                                onChange={(e) => setStatusFilter(e.target.value)}
+                            >
                                 <option>All</option>
                                 <option>Upcoming</option>
                                 <option>Completed</option>
                                 <option>Cancelled</option>
                             </select>
-                        </div>
-                        <div className="col-md-3">
-                            <div className="d-grid">
-                                <button className="btn btn-sm" style={{ backgroundColor: accentYellow, color: '#1f2933' }}>
-                                    Apply Filters
-                                </button>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -129,70 +166,54 @@ export default function MeetingsClient({ initialMeetings, userRole }: { initialM
             {/* Meetings Table */}
             <div className="card border-0 shadow-sm">
                 <div className="card-header d-flex justify-content-between align-items-center" style={headerBlue}>
-                    <h2 className="h6 fw-semibold mb-0">All Meetings ({meetings.length})</h2>
-                    <div className="btn-group btn-group-sm">
-                        <button className="btn btn-outline-light active">List</button>
-                        <button className="btn btn-outline-light">Calendar</button>
-                        {isAdmin && <button className="btn btn-outline-light">Export</button>}
-                    </div>
+                    <h2 className="h6 fw-semibold mb-0">All Meetings ({filteredMeetings.length})</h2>
                 </div>
                 <div className="card-body p-0">
-                    <div className="table-responsive">
-                        <table className="table table-sm mb-0 align-middle">
-                            <thead className="table-dark">
+                    <table className="table table-hover mb-0 align-middle">
+                        <thead className="table-light">
+                            <tr>
+                                <th style={{ width: '6%' }}>#</th>
+                                <th style={{ width: '30%' }}>Description</th>
+                                <th>Date</th>
+                                <th>Type</th>
+                                <th>Attendance</th>
+                                <th>Status</th>
+                                <th className="text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {filteredMeetings.length === 0 ? (
                                 <tr>
-                                    <th>Meeting ID</th>
-                                    <th>Description</th>
-                                    <th>Date & Time</th>
-                                    <th>Type</th>
-                                    <th>Staff</th>
-                                    <th>Attendance</th>
-                                    <th>Document</th>
-                                    <th>Status</th>
-                                    <th className="text-end pe-4">Actions</th>
+                                    <td colSpan={7} className="text-center py-5 text-muted">
+                                        No meetings found matching your filters.
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                {meetings.map((meeting) => {
+                            ) : (
+                                filteredMeetings.map((meeting) => {
                                     const staffCount = meeting.MeetingMember.length;
                                     const presentCount = meeting.MeetingMember.filter(m => m.IsPresent).length;
-                                    const ownerName = meeting.MeetingMember[0]?.Staff?.StaffName || "Unknown";
 
                                     return (
                                         <tr key={meeting.MeetingID}>
-                                            <td className="fw-semibold small">{meeting.MeetingID}</td>
+                                            <td className="fw-semibold">{meeting.MeetingID}</td>
                                             <td>
-                                                <div className="small">{meeting.MeetingDescription}</div>
-                                                <small className="text-muted">Owner: {ownerName}</small>
+                                                <div className="fw-medium">{meeting.MeetingDescription}</div>
                                             </td>
                                             <td className="small"><ClientDate dateString={meeting.MeetingDate} /></td>
-                                            <td className="small">
-                                                <span className="badge bg-light text-dark fs-2xs">{meeting.MeetingType.MeetingTypeName}</span>
+                                            <td>
+                                                <span className="badge bg-light text-dark border">{meeting.MeetingType.MeetingTypeName}</span>
                                             </td>
-                                            <td className="small">{staffCount}</td>
-                                            <td className="small">
-                                                <span className="badge bg-success fs-2xs">
-                                                    {presentCount}/{staffCount}
-                                                </span>
-                                            </td>
-                                            <td className="small">
-                                                {meeting.DocumentPath ? (
-                                                    <a href={meeting.DocumentPath} className="text-primary">MOM</a>
-                                                ) : (
-                                                    <span className="text-muted">-</span>
-                                                )}
+                                            <td>
+                                                <span className="badge bg-success">{presentCount}/{staffCount}</span>
                                             </td>
                                             <td>
                                                 {meeting.IsCancelled ? (
-                                                    <>
-                                                        <span className="badge bg-danger text-white fs-2xs">Cancelled</span>
-                                                        <div className="small text-muted">{meeting.CancellationReason}</div>
-                                                    </>
+                                                    <span className="badge bg-danger">Cancelled</span>
                                                 ) : (
-                                                    <span className="badge bg-primary text-white fs-2xs">Active</span>
+                                                    <span className="badge bg-primary">Active</span>
                                                 )}
                                             </td>
-                                            <td className="text-end pe-4">
+                                            <td className="text-end">
                                                 <div className="btn-group btn-group-sm" role="group">
                                                     <a href={`/meetings/${meeting.MeetingID}`} className="btn btn-outline-primary btn-sm">View</a>
                                                     {isAdmin && (
@@ -212,14 +233,14 @@ export default function MeetingsClient({ initialMeetings, userRole }: { initialM
                                             </td>
                                         </tr>
                                     );
-                                })}
-                            </tbody>
-                        </table>
-                    </div>
+                                })
+                            )}
+                        </tbody>
+                    </table>
                 </div>
                 <div className="card-footer bg-light border-0 py-2">
                     <small className="text-muted">
-                        Showing {meetings.length} meetings.
+                        Showing {filteredMeetings.length} of {initialMeetings.length} meetings.
                     </small>
                 </div>
             </div>
@@ -249,4 +270,3 @@ export default function MeetingsClient({ initialMeetings, userRole }: { initialM
         </div>
     );
 }
-

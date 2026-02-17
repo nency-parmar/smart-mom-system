@@ -77,70 +77,68 @@ export default function Staff() {
                 </div>
 
                 <div className="card-body p-0">
-                    <div className="table-responsive">
-                        <table className="table table-hover align-middle mb-0">
-                            <thead className="table-light">
+                    <table className="table table-hover align-middle mb-0">
+                        <thead className="table-light">
+                            <tr>
+                                <th className="ps-3">ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th className="text-center">Logins</th>
+                                <th>Last Login</th>
+                                <th className="text-end pe-3">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {isLoading ? (
                                 <tr>
-                                    <th className="ps-3">ID</th>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th className="text-center">Logins</th>
-                                    <th>Last Login</th>
-                                    <th className="text-end pe-3">Action</th>
+                                    <td colSpan={6} className="text-center py-5">
+                                        <div className="spinner-border spinner-border-sm text-primary me-2"></div>
+                                        Loading staff data...
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                {isLoading ? (
-                                    <tr>
-                                        <td colSpan={6} className="text-center py-5">
-                                            <div className="spinner-border spinner-border-sm text-primary me-2"></div>
-                                            Loading staff data...
-                                        </td>
-                                    </tr>
-                                ) : staffList.length === 0 ? (
-                                    <tr>
-                                        <td colSpan={6} className="text-center text-muted py-5">
-                                            No staff members found
-                                        </td>
-                                    </tr>
-                                ) : staffList.map((staff) => (
-                                    <tr key={staff.StaffID}>
-                                        <td className="ps-3"><span className="badge bg-light text-dark border">STF-{staff.StaffID}</span></td>
-                                        <td>
-                                            <div className="fw-bold text-dark">{staff.StaffName}</div>
-                                            <div className="small text-muted">{staff.Role}</div>
-                                        </td>
-                                        <td className="small">{staff.EmailAddress}</td>
-                                        <td className="text-center">
-                                            <span className="badge rounded-pill bg-blue-subtle text-primary px-3">
-                                                {staff._count.UserActivity}
-                                            </span>
-                                        </td>
-                                        <td className="small">
-                                            {staff.LastLogin ? (
-                                                <div className="d-flex flex-column">
-                                                    <ClientDate dateString={staff.LastLogin} />
-                                                </div>
-                                            ) : (
-                                                <span className="text-muted italic">Never</span>
-                                            )}
-                                        </td>
-                                        <td className="text-end pe-3">
-                                            <button
-                                                className="btn btn-sm btn-outline-primary me-2 border-0"
-                                                onClick={() => handleViewLogs(staff)}
-                                            >
-                                                <i className="bi bi-clock-history me-1"></i> Logs
-                                            </button>
-                                            <button className="btn btn-sm border-0 text-muted">
-                                                <i className="bi bi-pencil-square"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
+                            ) : staffList.length === 0 ? (
+                                <tr>
+                                    <td colSpan={6} className="text-center text-muted py-5">
+                                        No staff members found
+                                    </td>
+                                </tr>
+                            ) : staffList.map((staff) => (
+                                <tr key={staff.StaffID}>
+                                    <td className="ps-3"><span className="badge bg-light text-dark border">STF-{staff.StaffID}</span></td>
+                                    <td>
+                                        <div className="fw-bold text-dark">{staff.StaffName}</div>
+                                        <div className="small text-muted">{staff.Role}</div>
+                                    </td>
+                                    <td className="small">{staff.EmailAddress}</td>
+                                    <td className="text-center">
+                                        <span className="badge rounded-pill bg-blue-subtle text-primary px-3">
+                                            {staff._count.UserActivity}
+                                        </span>
+                                    </td>
+                                    <td className="small">
+                                        {staff.LastLogin ? (
+                                            <div className="d-flex flex-column">
+                                                <ClientDate dateString={staff.LastLogin} />
+                                            </div>
+                                        ) : (
+                                            <span className="text-muted italic">Never</span>
+                                        )}
+                                    </td>
+                                    <td className="text-end pe-3">
+                                        <button
+                                            className="btn btn-sm btn-outline-primary me-2 border-0"
+                                            onClick={() => handleViewLogs(staff)}
+                                        >
+                                            <i className="bi bi-clock-history me-1"></i> Logs
+                                        </button>
+                                        <button className="btn btn-sm border-0 text-muted">
+                                            <i className="bi bi-pencil-square"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
             </div>
 

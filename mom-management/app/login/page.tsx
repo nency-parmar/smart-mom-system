@@ -90,33 +90,55 @@ export default function LoginPage() {
                     <form action={handleSubmit}>
                         <div className="mb-3">
                             <label className="form-label small fw-bold text-secondary">Email Address</label>
-                            <div className="input-group">
-                                <span className="input-group-text bg-light border-end-0" style={{ borderRadius: '12px 0 0 12px' }}>
-                                    <i className="bi bi-envelope text-muted"></i>
+                            <div className="d-flex align-items-center"
+                                style={{
+                                    borderRadius: '12px',
+                                    border: '2px solid #e2e8f0',
+                                    transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
+                                    overflow: 'hidden',
+                                    background: '#f8fafc'
+                                }}
+                                onFocus={(e) => { e.currentTarget.style.borderColor = '#1d4ed8'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(29,78,216,0.15)'; }}
+                                onBlur={(e) => { e.currentTarget.style.borderColor = '#e2e8f0'; e.currentTarget.style.boxShadow = 'none'; }}
+                            >
+                                <span className="px-3 text-muted d-flex align-items-center">
+                                    <i className="bi bi-envelope"></i>
                                 </span>
                                 <input
                                     type="email"
                                     name="email"
-                                    className="form-control bg-light border-start-0 py-2"
-                                    style={{ borderRadius: '0 12px 12px 0', border: '1px solid #e2e8f0' }}
+                                    className="form-control py-2"
+                                    style={{ border: 'none', boxShadow: 'none', outline: 'none', background: 'transparent' }}
                                     placeholder="name@company.com"
                                     required
+                                    autoComplete="off"
                                 />
                             </div>
                         </div>
                         <div className="mb-4">
                             <label className="form-label small fw-bold text-secondary">Password</label>
-                            <div className="input-group">
-                                <span className="input-group-text bg-light border-end-0" style={{ borderRadius: '12px 0 0 12px' }}>
-                                    <i className="bi bi-lock text-muted"></i>
+                            <div className="d-flex align-items-center"
+                                style={{
+                                    borderRadius: '12px',
+                                    border: '2px solid #e2e8f0',
+                                    transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
+                                    overflow: 'hidden',
+                                    background: '#f8fafc'
+                                }}
+                                onFocus={(e) => { e.currentTarget.style.borderColor = '#1d4ed8'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(29,78,216,0.15)'; }}
+                                onBlur={(e) => { e.currentTarget.style.borderColor = '#e2e8f0'; e.currentTarget.style.boxShadow = 'none'; }}
+                            >
+                                <span className="px-3 text-muted d-flex align-items-center">
+                                    <i className="bi bi-lock"></i>
                                 </span>
                                 <input
                                     type="password"
                                     name="password"
-                                    className="form-control bg-light border-start-0 py-2"
-                                    style={{ borderRadius: '0 12px 12px 0', border: '1px solid #e2e8f0' }}
+                                    className="form-control py-2"
+                                    style={{ border: 'none', boxShadow: 'none', outline: 'none', background: 'transparent' }}
                                     placeholder="••••••••"
                                     required
+                                    autoComplete="off"
                                 />
                             </div>
                         </div>
@@ -147,11 +169,11 @@ export default function LoginPage() {
                     </div>
                 </div>
 
-                <div className="card-footer bg-light border-0 py-3 text-center">
+                {/* <div className="card-footer bg-light border-0 py-3 text-center">
                     <small className="text-muted" style={{ fontSize: '10px' }}>
                         Admin: admin@mom.com / admin | User: john@mom.com / user
                     </small>
-                </div>
+                </div> */}
             </div>
         </div>
     );

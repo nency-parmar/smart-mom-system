@@ -103,10 +103,12 @@ export default function Navbar() {
 
     return (
         <nav
-            className="sticky-top glass-navbar"
+            className="sticky-top"
             style={{
+                background: "#ffffff",
                 borderBottom: "1px solid #e5e7eb",
-                boxShadow: "0 6px 20px rgba(15,23,42,0.06)"
+                boxShadow: "0 4px 16px rgba(15,23,42,0.08)",
+                zIndex: 1030
             }}
         >
             <div className="container d-flex align-items-center justify-content-between" style={{ height: 68 }}>

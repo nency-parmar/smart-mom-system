@@ -53,57 +53,55 @@ export default function MeetingTypes() {
                 </div>
 
                 <div className="card-body p-0">
-                    <div className="table-responsive">
-                        <table className="table table-sm align-middle mb-0">
-                            <thead className="table-light">
-                                <tr>
-                                    <th style={{ width: "12%" }}>Type ID</th>
-                                    <th style={{ width: "35%" }}>Meeting Type</th>
-                                    <th>Remarks</th>
-                                    <th style={{ width: "18%" }}>Action</th>
+                    <table className="table table-hover align-middle mb-0">
+                        <thead className="table-light">
+                            <tr>
+                                <th style={{ width: "12%" }}>Type ID</th>
+                                <th style={{ width: "35%" }}>Meeting Type</th>
+                                <th>Remarks</th>
+                                <th style={{ width: "18%" }}>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {meetingTypes.map((type) => (
+                                <tr key={type.id}>
+                                    <td className="fw-semibold small">{type.id}</td>
+                                    <td className="fw-semibold small">{type.name}</td>
+                                    <td className="small text-muted">{type.remarks}</td>
+                                    <td>
+                                        <button
+                                            className="btn btn-sm me-2"
+                                            style={{
+                                                borderColor: primaryBlue,
+                                                color: primaryBlue,
+                                                borderRadius: "6px"
+                                            }}
+                                        >
+                                            Edit
+                                        </button>
+                                        <button
+                                            className="btn btn-sm"
+                                            style={{
+                                                borderColor: "#dc2626",
+                                                color: "#dc2626",
+                                                borderRadius: "6px"
+                                            }}
+                                        >
+                                            Delete
+                                        </button>
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                {meetingTypes.map((type) => (
-                                    <tr key={type.id}>
-                                        <td className="fw-semibold small">{type.id}</td>
-                                        <td className="fw-semibold small">{type.name}</td>
-                                        <td className="small text-muted">{type.remarks}</td>
-                                        <td>
-                                            <button
-                                                className="btn btn-sm me-2"
-                                                style={{
-                                                    borderColor: primaryBlue,
-                                                    color: primaryBlue,
-                                                    borderRadius: "6px"
-                                                }}
-                                            >
-                                                Edit
-                                            </button>
-                                            <button
-                                                className="btn btn-sm"
-                                                style={{
-                                                    borderColor: "#dc2626",
-                                                    color: "#dc2626",
-                                                    borderRadius: "6px"
-                                                }}
-                                            >
-                                                Delete
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
+                            ))}
 
-                                {meetingTypes.length === 0 && (
-                                    <tr>
-                                        <td colSpan={4} className="text-center text-muted py-4">
-                                            No meeting types found
-                                        </td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
+                            {meetingTypes.length === 0 && (
+                                <tr>
+                                    <td colSpan={4} className="text-center text-muted py-4">
+                                        No meeting types found
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
                 </div>
             </div>
 

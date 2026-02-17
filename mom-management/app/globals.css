@@ -240,3 +240,69 @@ body {
 .fade.show {
   opacity: 1 !important;
 }
+
+/* Navbar: solid white background */
+.glass-navbar {
+  background: #ffffff !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: box-shadow 0.3s ease, background 0.3s ease;
+}
+
+/* Login / Signup input group - unified border on focus */
+.input-group {
+  border-radius: 12px !important;
+  overflow: hidden;
+  border: 2px solid transparent;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input-group:focus-within {
+  border-color: #1d4ed8 !important;
+  box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.15) !important;
+}
+
+.input-group .input-group-text {
+  border: none !important;
+  outline: none !important;
+}
+
+.input-group .form-control {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.input-group .form-control:focus {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Override browser autofill yellow background */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px #f8fafc inset !important;
+  -webkit-text-fill-color: #1e293b !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Global table improvements — fit within viewport, no horizontal scroll */
+.table {
+  width: 100% !important;
+  table-layout: auto;
+}
+
+.table th,
+.table td {
+  padding: 10px 14px !important;
+  vertical-align: middle !important;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.table-hover tbody tr:hover {
+  background-color: #f1f5f9 !important;
+}
