@@ -3,6 +3,8 @@ import { cookies } from 'next/headers';
 import { prisma } from '@/lib/prisma';
 import { redirect } from 'next/navigation';
 
+export const dynamic = 'force-dynamic';
+
 export default async function ProfilePage() {
     const cookieStore = await cookies();
     const userIdCookie = cookieStore.get('userId');

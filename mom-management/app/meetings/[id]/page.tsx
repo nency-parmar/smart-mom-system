@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation';
 import ClientDate from '@/components/ClientDate';
 import { cookies } from 'next/headers';
 
+export const dynamic = 'force-dynamic';
+
 export default async function MeetingDetailPage(props: { params: Promise<{ id: string }> }) {
     const params = await props.params;
     const id = parseInt(params.id);

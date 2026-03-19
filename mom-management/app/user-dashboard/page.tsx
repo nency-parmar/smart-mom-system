@@ -4,6 +4,8 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import ClientDate from '@/components/ClientDate';
 
+export const dynamic = 'force-dynamic';
+
 export default async function UserDashboard() {
     const cookieStore = await cookies();
     const userIdCookie = cookieStore.get('userId');
@@ -147,8 +149,8 @@ export default async function UserDashboard() {
                                                         </td>
                                                         <td>
                                                             <span className={`badge rounded-pill fw-medium ${meeting.MeetingType.MeetingTypeID === 1 ? 'bg-primary-subtle text-primary' :
-                                                                    meeting.MeetingType.MeetingTypeID === 2 ? 'bg-info-subtle text-info' :
-                                                                        'bg-warning-subtle text-warning'
+                                                                meeting.MeetingType.MeetingTypeID === 2 ? 'bg-info-subtle text-info' :
+                                                                    'bg-warning-subtle text-warning'
                                                                 }`} style={{ padding: '6px 12px' }}>
                                                                 {meeting.MeetingType.MeetingTypeName}
                                                             </span>

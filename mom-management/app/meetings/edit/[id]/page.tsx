@@ -2,6 +2,8 @@ import { getMeeting, getMeetingTypes } from '@/app/actions/meetings';
 import EditMeetingForm from './EditMeetingForm';
 import { notFound } from 'next/navigation';
 
+export const dynamic = 'force-dynamic';
+
 export default async function EditMeetingPage(props: { params: Promise<{ id: string }> }) {
     const params = await props.params;
     const id = parseInt(params.id);
