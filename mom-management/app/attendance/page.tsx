@@ -1,7 +1,7 @@
+export const dynamic = 'force-dynamic';
+
 import { getAttendanceData } from '@/app/actions/attendance';
 import AttendanceClient from './AttendanceClient';
-
-export const dynamic = 'force-dynamic';
 
 export default async function AttendancePage() {
     const attendanceData = await getAttendanceData();
