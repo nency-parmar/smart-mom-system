@@ -1,11 +1,11 @@
 generator client {
-  provider        = "prisma-client"
-  output          = "../lib/generated/prisma"
-  previewFeatures = ["driverAdapters"]
+  provider = "prisma-client-js"
+  output   = "../lib/generated/prisma"
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
+
 }
 
 model MeetingMember {
@@ -14,52 +14,56 @@ model MeetingMember {
   StaffID         Int
   IsPresent       Boolean  @default(false)
   Remarks         String?  @db.VarChar(255)
-  Created         DateTime @default(now()) @db.DateTime(0)
-  Modified        DateTime @default(now()) @db.DateTime(0)
-  Meetings        Meetings @relation(fields: [MeetingID], references: [MeetingID], onDelete: Cascade, map: "fk_meetingmember_meeting")
-  Staff           Staff    @relation(fields: [StaffID], references: [StaffID], map: "fk_meetingmember_staff")
+  Created         DateTime @default(now())
+  Modified        DateTime @updatedAt
 
-  @@index([MeetingID], map: "fk_meetingmember_meeting")
-  @@index([StaffID], map: "fk_meetingmember_staff")
+  Meetings Meetings @relation(fields: [MeetingID], references: [MeetingID], onDelete: Cascade)
+  Staff    Staff    @relation(fields: [StaffID], references: [StaffID])
+
+  @@index([MeetingID])
+  @@index([StaffID])
 }
 
 model MeetingType {
   MeetingTypeID   Int        @id @default(autoincrement())
   MeetingTypeName String     @db.VarChar(100)
   Remarks         String?    @db.VarChar(255)
-  Created         DateTime   @default(now()) @db.DateTime(0)
-  Modified        DateTime   @default(now()) @db.DateTime(0)
-  Meetings        Meetings[]
+  Created         DateTime   @default(now())
+  Modified        DateTime   @updatedAt
+
+  Meetings Meetings[]
 }
 
 model Meetings {
   MeetingID            Int             @id @default(autoincrement())
-  MeetingDate          DateTime        @db.DateTime(0)
+  MeetingDate          DateTime
   MeetingTypeID        Int
   MeetingDescription   String?         @db.VarChar(255)
   DocumentPath         String?         @db.VarChar(255)
-  Created              DateTime        @default(now()) @db.DateTime(0)
-  Modified             DateTime        @default(now()) @db.DateTime(0)
+  Created              DateTime        @default(now())
+  Modified             DateTime        @updatedAt
   IsCancelled          Boolean         @default(false)
-  CancellationDateTime DateTime?       @db.DateTime(0)
+  CancellationDateTime DateTime?
   CancellationReason   String?         @db.VarChar(255)
-  MeetingMember        MeetingMember[]
-  MeetingType          MeetingType     @relation(fields: [MeetingTypeID], references: [MeetingTypeID], map: "fk_meetings_meetingtype")
 
-  @@index([MeetingTypeID], map: "fk_meetings_meetingtype")
+  MeetingMember MeetingMember[]
+  MeetingType   MeetingType @relation(fields: [MeetingTypeID], references: [MeetingTypeID])
+
+  @@index([MeetingTypeID])
 }
 
 model Staff {
-  StaffID       Int             @id @default(autoincrement())
-  StaffName     String          @db.VarChar(150)
-  MobileNo      String?         @db.VarChar(20)
-  EmailAddress  String?         @db.VarChar(150)
-  Remarks       String?         @db.VarChar(255)
-  Created       DateTime        @default(now()) @db.DateTime(0)
-  Modified      DateTime        @default(now()) @db.DateTime(0)
-  Password      String?         @db.VarChar(50)
-  Role          String?         @default("USER") @db.VarChar(20)
-  LastLogin     DateTime?       @db.DateTime(0)
+  StaffID      Int             @id @default(autoincrement())
+  StaffName    String          @db.VarChar(150)
+  MobileNo     String?         @db.VarChar(20)
+  EmailAddress String?         @db.VarChar(150)
+  Remarks      String?         @db.VarChar(255)
+  Created      DateTime        @default(now())
+  Modified     DateTime        @updatedAt
+  Password     String?         @db.VarChar(50)
+  Role         String?         @default("USER") @db.VarChar(20)
+  LastLogin    DateTime?
+
   MeetingMember MeetingMember[]
   UserActivity  UserActivity[]
 }
@@ -67,9 +71,10 @@ model Staff {
 model UserActivity {
   ActivityID   Int      @id @default(autoincrement())
   StaffID      Int
-  ActivityType String   @db.VarChar(50) // 'LOGIN' or 'SIGNUP'
-  Timestamp    DateTime @default(now()) @db.DateTime(0)
-  Staff        Staff    @relation(fields: [StaffID], references: [StaffID], onDelete: Cascade)
+  ActivityType String   @db.VarChar(50)
+  Timestamp    DateTime @default(now())
+
+  Staff Staff @relation(fields: [StaffID], references: [StaffID], onDelete: Cascade)
 
   @@index([StaffID])
 }
@@ -78,21 +83,21 @@ model Attendance {
   AttendanceID       Int       @id @default(autoincrement())
   MeetingID          String    @db.VarChar(20)
   MeetingDescription String?   @db.VarChar(255)
-  MeetingDate        DateTime? @db.DateTime(0)
+  MeetingDate        DateTime?
   MeetingTypeName    String?   @db.VarChar(100)
   StaffID            Int
   StaffName          String    @db.VarChar(100)
   IsPresent          Boolean?
   Remarks            String?   @db.VarChar(255)
-  CreatedAt          DateTime? @default(now()) @db.Timestamp(0)
+  CreatedAt          DateTime? @default(now())
 }
 
 model departments {
   department_id   Int       @id @default(autoincrement())
   department_name String    @db.VarChar(100)
   remarks         String?   @db.VarChar(255)
-  created_at      DateTime? @default(now()) @db.Timestamp(0)
-  updated_at      DateTime? @default(now()) @db.Timestamp(0)
+  created_at      DateTime? @default(now())
+  updated_at      DateTime? @updatedAt
 }
 
 model venues {
@@ -101,6 +106,6 @@ model venues {
   capacity   Int
   location   String?   @db.VarChar(150)
   remarks    String?   @db.VarChar(255)
-  created_at DateTime? @default(now()) @db.Timestamp(0)
-  updated_at DateTime? @default(now()) @db.Timestamp(0)
+  created_at DateTime? @default(now())
+  updated_at DateTime? @updatedAt
 }
