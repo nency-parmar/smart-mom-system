@@ -1,0 +1,110 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model MeetingMember {
+  MeetingMemberID Int      @id @default(autoincrement())
+  MeetingID       Int
+  StaffID         Int
+  IsPresent       Boolean  @default(false)
+  Remarks         String?  @db.VarChar(255)
+  Created         DateTime @default(now())
+  Modified        DateTime @updatedAt
+
+  Meetings Meetings @relation(fields: [MeetingID], references: [MeetingID], onDelete: Cascade)
+  Staff    Staff    @relation(fields: [StaffID], references: [StaffID])
+
+  @@index([MeetingID])
+  @@index([StaffID])
+}
+
+model MeetingType {
+  MeetingTypeID   Int      @id @default(autoincrement())
+  MeetingTypeName String   @db.VarChar(100)
+  Remarks         String?  @db.VarChar(255)
+  Created         DateTime @default(now())
+  Modified        DateTime @updatedAt
+
+  Meetings Meetings[]
+}
+
+model Meetings {
+  MeetingID            Int       @id @default(autoincrement())
+  MeetingDate          DateTime
+  MeetingTypeID        Int
+  MeetingDescription   String?   @db.VarChar(255)
+  DocumentPath         String?   @db.VarChar(255)
+  Created              DateTime  @default(now())
+  Modified             DateTime  @updatedAt
+  IsCancelled          Boolean   @default(false)
+  CancellationDateTime DateTime?
+  CancellationReason   String?   @db.VarChar(255)
+
+  MeetingMember MeetingMember[]
+  MeetingType   MeetingType     @relation(fields: [MeetingTypeID], references: [MeetingTypeID])
+
+  @@index([MeetingTypeID])
+}
+
+model Staff {
+  StaffID      Int       @id @default(autoincrement())
+  StaffName    String    @db.VarChar(150)
+  MobileNo     String?   @db.VarChar(20)
+  EmailAddress String?   @db.VarChar(150)
+  Remarks      String?   @db.VarChar(255)
+  Created      DateTime  @default(now())
+  Modified     DateTime  @updatedAt
+  Password     String?   @db.VarChar(50)
+  Role         String?   @default("USER") @db.VarChar(20)
+  LastLogin    DateTime?
+
+  MeetingMember MeetingMember[]
+  UserActivity  UserActivity[]
+}
+
+model UserActivity {
+  ActivityID   Int      @id @default(autoincrement())
+  StaffID      Int
+  ActivityType String   @db.VarChar(50)
+  Timestamp    DateTime @default(now())
+
+  Staff Staff @relation(fields: [StaffID], references: [StaffID], onDelete: Cascade)
+
+  @@index([StaffID])
+}
+
+model Attendance {
+  AttendanceID       Int       @id @default(autoincrement())
+  MeetingID          String    @db.VarChar(20)
+  MeetingDescription String?   @db.VarChar(255)
+  MeetingDate        DateTime?
+  MeetingTypeName    String?   @db.VarChar(100)
+  StaffID            Int
+  StaffName          String    @db.VarChar(100)
+  IsPresent          Boolean?
+  Remarks            String?   @db.VarChar(255)
+  CreatedAt          DateTime? @default(now())
+}
+
+model departments {
+  department_id   Int       @id @default(autoincrement())
+  department_name String    @db.VarChar(100)
+  remarks         String?   @db.VarChar(255)
+  created_at      DateTime? @default(now())
+  updated_at      DateTime? @updatedAt
+}
+
+model venues {
+  venue_id   String    @id @db.VarChar(10)
+  venue_name String    @db.VarChar(100)
+  capacity   Int
+  location   String?   @db.VarChar(150)
+  remarks    String?   @db.VarChar(255)
+  created_at DateTime? @default(now())
+  updated_at DateTime? @updatedAt
+}
