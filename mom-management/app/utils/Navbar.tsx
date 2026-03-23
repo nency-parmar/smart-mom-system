@@ -275,7 +275,11 @@ export default function Navbar() {
                         </span>
                     </Link>
 
-                    <form action={logout}>
+                    <form action={logout} onSubmit={(e) => {
+                        if (!confirm("Are you sure you want to logout?")) {
+                            e.preventDefault();
+                        }
+                    }}>
                         <button
                             type="submit"
                             className="btn btn-sm btn-smooth"
