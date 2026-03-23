@@ -118,6 +118,7 @@ export async function createMeeting(formData: FormData) {
         }
     });
 
+    revalidatePath('/');
     revalidatePath('/meetings');
     redirect('/meetings');
 }
@@ -132,6 +133,7 @@ export async function cancelMeeting(meetingId: number, reason: string) {
                 CancellationDateTime: new Date()
             }
         });
+        revalidatePath('/');
         revalidatePath('/meetings');
     } catch (error) {
         console.error("Failed to cancel meeting:", error);
@@ -158,6 +160,7 @@ export async function updateMeeting(meetingId: number, formData: FormData) {
         }
     });
 
+    revalidatePath('/');
     revalidatePath('/meetings');
     redirect('/meetings');
 }
@@ -167,6 +170,7 @@ export async function deleteMeeting(meetingId: number) {
         await prisma.meetings.delete({
             where: { MeetingID: meetingId }
         });
+        revalidatePath('/');
         revalidatePath('/meetings');
     } catch (error) {
         console.error("Failed to delete meeting:", error);

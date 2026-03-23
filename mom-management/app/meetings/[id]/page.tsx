@@ -2,6 +2,7 @@ import { getMeeting, deleteMeeting } from '@/app/actions/meetings';
 import { notFound } from 'next/navigation';
 import ClientDate from '@/components/ClientDate';
 import { cookies } from 'next/headers';
+import MeetingRowActions from '@/components/MeetingRowActions';
 
 export const dynamic = 'force-dynamic';
 
@@ -41,9 +42,7 @@ export default async function MeetingDetailPage(props: { params: Promise<{ id: s
                     </div>
                     {isAdmin && (
                         <div className="d-flex gap-2">
-                            <a href={`/meetings/edit/${meeting.MeetingID}`} className="btn btn-sm btn-outline-primary">
-                                Edit Meeting
-                            </a>
+                             <MeetingRowActions meetingId={meeting.MeetingID} isCancelled={meeting.IsCancelled} />
                         </div>
                     )}
                 </div>

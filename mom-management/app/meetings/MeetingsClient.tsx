@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import ClientDate from '@/components/ClientDate';
 import { cancelMeeting, getMeetings, deleteMeeting } from '@/app/actions/meetings';
+import MeetingRowActions from '@/components/MeetingRowActions';
 
 // Define the shape of the data we expect from the server
 export interface MeetingWithDetails {
@@ -250,30 +251,7 @@ export default function MeetingsClient({ initialUserRole }: { initialUserRole: s
                                                 )}
                                             </td>
                                             <td className="text-end">
-                                                <div className="btn-group btn-group-sm" role="group">
-                                                    <a href={`/meetings/${meeting.MeetingID}`} className="btn btn-outline-primary btn-sm">View</a>
-                                                    {isAdmin && (
-                                                        <>
-                                                            <a href={`/meetings/edit/${meeting.MeetingID}`} className="btn btn-outline-secondary btn-sm">Edit</a>
-                                                            {!meeting.IsCancelled && (
-                                                                <button
-                                                                    className="btn btn-outline-warning btn-sm"
-                                                                    onClick={() => handleCancel(meeting.MeetingID)}
-                                                                    title="Cancel Meeting"
-                                                                >
-                                                                    Cancel
-                                                                </button>
-                                                            )}
-                                                            <button
-                                                                className="btn btn-outline-danger btn-sm"
-                                                                onClick={() => handleDelete(meeting.MeetingID)}
-                                                                title="Delete Permanently"
-                                                            >
-                                                                Delete
-                                                            </button>
-                                                        </>
-                                                    )}
-                                                </div>
+                                                <MeetingRowActions meetingId={meeting.MeetingID} isCancelled={meeting.IsCancelled} showAdminActions={isAdmin} />
                                             </td>
                                         </tr>
                                     );

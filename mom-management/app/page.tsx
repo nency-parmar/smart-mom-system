@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { getMeetings } from '@/app/actions/meetings';
 import ClientDate from '@/components/ClientDate';
 import { logout } from '@/app/actions/auth';
+import MeetingRowActions from '@/components/MeetingRowActions';
 
 export default async function Home() {
   const cookieStore = await cookies();
@@ -206,6 +207,7 @@ export default async function Home() {
                       <th style={{ width: '12%' }}>Type</th>
                       <th style={{ width: '13%' }}>Owner</th>
                       <th style={{ width: '15%' }}>Status</th>
+                      <th style={{ width: '17%' }} className="text-end">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -237,6 +239,9 @@ export default async function Home() {
                             >
                               {m.IsCancelled ? "Cancelled" : (new Date(m.MeetingDate) < new Date() ? "Completed" : "Upcoming")}
                             </span>
+                          </td>
+                          <td className="text-end pe-3">
+                            <MeetingRowActions meetingId={m.MeetingID} isCancelled={m.IsCancelled} />
                           </td>
                         </tr>
                       );
